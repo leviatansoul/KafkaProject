@@ -21,7 +21,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 public class ExtractJson {
-	
+	//CARLOS ES UN POCO RETARDER
 	public static String getFile(String url) {
 		//-----------------------------------------------------//
 	      //  Step 1:  Start creating a few objects we'll need.

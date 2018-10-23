@@ -1,3 +1,4 @@
+package kafkaproject;
 import com.google.gson.*;
 
 import java.io.BufferedInputStream;
@@ -30,7 +31,7 @@ public class ExtractJson {
 	      InputStream is = null;
 	      DataInputStream dis;
 	      String s;
-	      String res = "";
+	      String res = ""; //
 
 	      try {
 

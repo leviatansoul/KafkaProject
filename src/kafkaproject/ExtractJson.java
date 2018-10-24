@@ -2,9 +2,11 @@ package kafkaproject;
 import com.google.gson.*;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.*;
 import com.google.gson.*;
 
@@ -21,7 +23,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 public class ExtractJson {
-	//CARLOS ES UN POCO RETARDER
+	
 	public static String getFile(String url) {
 		//-----------------------------------------------------//
 	      //  Step 1:  Start creating a few objects we'll need.
@@ -29,7 +31,7 @@ public class ExtractJson {
 
 	      URL u;
 	      InputStream is = null;
-	      DataInputStream dis;
+	      BufferedReader dis;
 	      String s;
 	      String res = ""; //
 
@@ -59,7 +61,7 @@ public class ExtractJson {
 	         // easier.                                                     //
 	         //-------------------------------------------------------------//
 
-	         dis = new DataInputStream(new BufferedInputStream(is));
+	         dis = new BufferedReader(new InputStreamReader(is));
 
 	         //------------------------------------------------------------//
 	         // Step 5:                                                    //
@@ -105,55 +107,41 @@ public class ExtractJson {
 	      return res;
 	}
 	
+	public static JsonObject getJson(String url) {
+		
+		JsonObject jobj = new JsonObject();
+		 try {
+	        	 //Url del json (añadir la de BiciMad)
+	        	String jsonString = ExtractJson.getFile(url); //Obtiene Json en String
+	        	Gson gson = new Gson();
+	        	JsonElement jelem = gson.fromJson(jsonString, JsonElement.class);
+	        	jobj = jelem.getAsJsonObject(); //Obtenemos Json de la web       	
+	        	
+	        	        
+
+	        }
+	        catch (Exception e) {
+
+	            e.printStackTrace();
+	        }
+		 return jobj;
+		 
+	}
+	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
-		URL XMLUrl = null;
-		Document document = null;
-       // HttpsURLConnection urlConnection = null;
-        URLConnection urlC = null;
-
-        try {
-        	String url = ""; //Url del json (añadir la de BiciMad)
-        	String jsonString = ExtractJson.getFile(url); //Obtiene Json en String
-        	
-        	Gson gson = new Gson();
-        	JsonElement jelem = gson.fromJson(jsonString, JsonElement.class);
-        	JsonObject jobj = jelem.getAsJsonObject(); //Obtenemos Json de la web
-        	
-        	//DE AQUI PARA ABAJO NO SIRVE
-        	
-        	XMLUrl = new URL(url);
-           // urlConnection = (HttpsURLConnection) XMLUrl.openConnection();
-           // InputStream is = urlConnection.getInputStream();
-        		
-        	urlC =  XMLUrl.openConnection();
-        	
-            InputStream is = urlC.getInputStream();
-
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setExpandEntityReferences(false);
-            factory.setIgnoringComments(true);
-            factory.setIgnoringElementContentWhitespace(true);
-            DocumentBuilder builder = factory.newDocumentBuilder();
-
-            document = builder.parse(is);
-           // urlConnection.disconnect();
-          //  urlC.
-
+		String url = "https://rbdata.emtmadrid.es:8443/BiciMad/get_stations/WEB.SERV.diego2.gd@gmail.com/9933C03A-C88F-4222-8556-6431A1D0D84A/";
+		JsonObject json = ExtractJson.getJson(url);
+		String data = json.get("data").getAsString();
+		Gson gson = new Gson();
+    	JsonElement jelem = gson.fromJson(data, JsonElement.class);
+    	JsonObject dataJson = jelem.getAsJsonObject();
+    	JsonArray stationsJson = dataJson.getAsJsonArray("stations");
+    	dataJson = stationsJson.get(0).getAsJsonObject();
+    	Station station = gson.fromJson(dataJson, Station.class);
+        
+        System.out.println(json.get("code").getAsInt());
         }
-        catch (Exception e) {
-
-            e.printStackTrace();
-        }
-        
-        NodeList placemarkList = document.getElementsByTagName("data");
-        
-            Element placemark = (Element) placemarkList.item(0);
-            
-            System.out.println(placemark.getTextContent());
-        
-	}
 
 }

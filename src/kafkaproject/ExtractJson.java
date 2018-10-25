@@ -1,4 +1,5 @@
 package kafkaproject;
+import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 
 import java.io.BufferedInputStream;
@@ -8,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.*;
+import java.util.List;
+
 import com.google.gson.*;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -21,6 +24,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import java.lang.reflect.Type;
 
 public class ExtractJson {
 	
@@ -129,21 +134,39 @@ public class ExtractJson {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
+		String stationJson = "";
+		
 		String url = "https://rbdata.emtmadrid.es:8443/BiciMad/get_stations/WEB.SERV.diego2.gd@gmail.com/9933C03A-C88F-4222-8556-6431A1D0D84A/";
 		JsonObject json = ExtractJson.getJson(url);
 		
 		String data = json.get("data").getAsString();
+		
 		
 		Gson gson = new Gson();
     	JsonElement jelem = gson.fromJson(data, JsonElement.class);
     	JsonObject dataJson = jelem.getAsJsonObject();
     	
     	JsonArray stationsJson = dataJson.getAsJsonArray("stations");
-    	dataJson = stationsJson.get(0).getAsJsonObject();
     	
-    	Station station = gson.fromJson(dataJson, Station.class);
+    	for(int i = 0; i<stationsJson.size(); i++) {
+    		
+    		if (i==0) {
+            	stationJson = "[" + stationsJson.get(i).getAsJsonObject();
+    		} 
+    		else {
+    			
+            	stationJson = stationJson + "," + stationsJson.get(i).getAsJsonObject();
+    		}
+    		
+    		if (i==stationsJson.size()-1) {
+    			stationJson = stationJson + "]";
+    		}
+    	}
+    	    	
+    	Type stationList = new TypeToken<List<Station>>(){}.getType();
+    	List<Station> station = gson.fromJson(stationJson, stationList);
         
-        System.out.println(json.get("code").getAsInt());
+        System.out.println(stationJson);
         }
 
 }

@@ -12,7 +12,7 @@ public class Station {
 	private int activate;
 	private int no_available;
 	private int total_bases;
-	private int doc_bikes;
+	private int dock_bikes;
 	private int free_bases;
 	private int reservations_count;
 	
@@ -143,14 +143,14 @@ public class Station {
 
 
 
-	private int getDoc_bikes() {
-		return doc_bikes;
+	private int getDock_bikes() {
+		return dock_bikes;
 	}
 
 
 
-	private void setDoc_bikes(int doc_bikes) {
-		this.doc_bikes = doc_bikes;
+	private void setDock_bikes(int doc_bikes) {
+		this.dock_bikes = doc_bikes;
 	}
 
 

@@ -117,28 +117,30 @@ public class ExtractJson {
 	        	JsonElement jelem = gson.fromJson(jsonString, JsonElement.class);
 	        	jobj = jelem.getAsJsonObject(); //Obtenemos Json de la web       	
 	        	
-	        	        
-
 	        }
 	        catch (Exception e) {
 
 	            e.printStackTrace();
 	        }
-		 return jobj;
-		 
+		 return jobj; 
 	}
 	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		
 		String url = "https://rbdata.emtmadrid.es:8443/BiciMad/get_stations/WEB.SERV.diego2.gd@gmail.com/9933C03A-C88F-4222-8556-6431A1D0D84A/";
 		JsonObject json = ExtractJson.getJson(url);
+		
 		String data = json.get("data").getAsString();
+		
 		Gson gson = new Gson();
     	JsonElement jelem = gson.fromJson(data, JsonElement.class);
     	JsonObject dataJson = jelem.getAsJsonObject();
+    	
     	JsonArray stationsJson = dataJson.getAsJsonArray("stations");
     	dataJson = stationsJson.get(0).getAsJsonObject();
+    	
     	Station station = gson.fromJson(dataJson, Station.class);
         
         System.out.println(json.get("code").getAsInt());

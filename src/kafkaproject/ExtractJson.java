@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.*;
@@ -28,6 +29,10 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import java.lang.reflect.Type;
 
 public class ExtractJson {
+	
+	private static List<Station> stationList = new ArrayList<Station>();
+	private final static String URL = "https://rbdata.emtmadrid.es:8443/BiciMad/get_stations/WEB.SERV.diego2.gd@gmail.com/9933C03A-C88F-4222-8556-6431A1D0D84A/";
+
 	
 	public static String getFile(String url) {
 		//-----------------------------------------------------//
@@ -134,10 +139,8 @@ public class ExtractJson {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		String stationJson = "";
 		
-		String url = "https://rbdata.emtmadrid.es:8443/BiciMad/get_stations/WEB.SERV.diego2.gd@gmail.com/9933C03A-C88F-4222-8556-6431A1D0D84A/";
-		JsonObject json = ExtractJson.getJson(url);
+		JsonObject json = ExtractJson.getJson(URL);
 		
 		String data = json.get("data").getAsString();
 		
@@ -149,24 +152,14 @@ public class ExtractJson {
     	JsonArray stationsJson = dataJson.getAsJsonArray("stations");
     	
     	for(int i = 0; i<stationsJson.size(); i++) {
-    		
-    		if (i==0) {
-            	stationJson = "[" + stationsJson.get(i).getAsJsonObject();
-    		} 
-    		else {
-    			
-            	stationJson = stationJson + "," + stationsJson.get(i).getAsJsonObject();
-    		}
-    		
-    		if (i==stationsJson.size()-1) {
-    			stationJson = stationJson + "]";
-    		}
+    		Station st = gson.fromJson(stationsJson.get(i), Station.class);
+    		System.out.println(st.getLatitude());
+    		stationList.add(st);
     	}
-    	    	
-    	Type stationList = new TypeToken<List<Station>>(){}.getType();
-    	List<Station> station = gson.fromJson(stationJson, stationList);
+    	
+    	
         
-        System.out.println(stationJson);
+        System.out.println(URL);
         }
 
 }

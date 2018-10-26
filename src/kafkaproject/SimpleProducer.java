@@ -22,6 +22,7 @@ public class SimpleProducer {
 	}
 	
 	void produceAndPrint() {
+		
 		for (int i = 1; i < 100; i++)
 		// Fire-and-forget send(topic, key, value)
 		// Send adds records to unsent records buffer and return

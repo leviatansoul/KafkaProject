@@ -30,7 +30,7 @@ import java.lang.reflect.Type;
 
 public class ExtractJson {
 	
-	private static List<Station> stationList = new ArrayList<Station>();
+	public static ArrayList<Station> stationList = new ArrayList<Station>();
 	private final static String URL = "https://rbdata.emtmadrid.es:8443/BiciMad/get_stations/WEB.SERV.diego2.gd@gmail.com/9933C03A-C88F-4222-8556-6431A1D0D84A/";
 
 	
@@ -135,11 +135,7 @@ public class ExtractJson {
 		 return jobj; 
 	}
 	
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
-		
+	public static void fillStationList() {
 		JsonObject json = ExtractJson.getJson(URL);
 		
 		String data = json.get("data").getAsString();
@@ -153,13 +149,22 @@ public class ExtractJson {
     	
     	for(int i = 0; i<stationsJson.size(); i++) {
     		Station st = gson.fromJson(stationsJson.get(i), Station.class);
-    		System.out.println(st.getLatitude());
+    		//System.out.println(st.getLatitude());
     		stationList.add(st);
     	}
-    	
-    	
+
         
         System.out.println(URL);
+	}
+	
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		
+		
+    	
+    	
         }
 
 }

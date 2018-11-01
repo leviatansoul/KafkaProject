@@ -31,7 +31,7 @@ public class SimpleConsumer {
 	
 	public void suscribe(String[] topic) {
 		System.out.println("suscribre");
-		List<String> topics = Arrays.asList("SDTF");
+		List<String> topics = Arrays.asList("Stations");
 		this.consumer.subscribe(topics);
 	}
 	
@@ -47,7 +47,7 @@ public class SimpleConsumer {
 		
 		while(true) {
 			 
-			ConsumerRecords<String, String> records = this.consumer.poll(100);
+			ConsumerRecords<String, String> records = this.consumer.poll(200);
 			
 			for (ConsumerRecord<String, String> record : records) { 
 				System.out.println("part3");

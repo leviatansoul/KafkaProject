@@ -30,6 +30,23 @@ public class SimpleProducer {
 		.toString(i), Integer.toString(i)));
 		}
 	
+	void produceSinlgeStation() {
+		ExtractJson.fillStationList();
+		producer.send(new ProducerRecord<String, String>("Stations", "station", ExtractJson.stationList.get(0).toString()));
+	}
+	
+	void produceValuesStations() {
+		ExtractJson.fillStationList();
+		
+		for(Station station : ExtractJson.stationList)
+		{
+			
+			producer.send(new ProducerRecord<String, String>("Stations", "id", ""+station.getId()));
+			
+		}
+		
+	}
+	
 	void stop() {
 		System.out.println("FIN");
 		producer.close();
@@ -38,7 +55,7 @@ public class SimpleProducer {
 	
 	public static void main(String[] args) {
 		SimpleProducer myProducer = new SimpleProducer();
-		myProducer.produceAndPrint();
+		myProducer.produceValuesStations();
 		myProducer.stop();
 	}
 

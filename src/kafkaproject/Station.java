@@ -176,6 +176,10 @@ public class Station {
 	public void setReservations_count(int reservations_count) {
 		this.reservations_count = reservations_count;
 	}
+	
+	public String toString() {
+		return ""+getId()+","+getLatitude()+","+getLongitude()+","+getName()+","+getAddress();
+	}
 
 
 

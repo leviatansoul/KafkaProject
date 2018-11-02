@@ -40,11 +40,20 @@ public class SimpleProducer {
 		
 		for(Station station : ExtractJson.stationList)
 		{
-			
 			producer.send(new ProducerRecord<String, String>("Stations", "id", ""+station.getId()));
-			
+			producer.send(new ProducerRecord<String, String>("Stations", "latitude", ""+station.getLatitude()));
+			producer.send(new ProducerRecord<String, String>("Stations", "longitude", ""+station.getLongitude()));
+			producer.send(new ProducerRecord<String, String>("Stations", "name", ""+station.getName()));
+			producer.send(new ProducerRecord<String, String>("Stations", "light", ""+station.getLight()));
+			producer.send(new ProducerRecord<String, String>("Stations", "number", ""+station.getNumber()));
+			producer.send(new ProducerRecord<String, String>("Stations", "address", ""+station.getAddress()));
+			producer.send(new ProducerRecord<String, String>("Stations", "activate", ""+station.getActivate()));
+			producer.send(new ProducerRecord<String, String>("Stations", "no_available", ""+station.getNo_available()));
+			producer.send(new ProducerRecord<String, String>("Stations", "total_bases", ""+station.getTotal_bases()));
+			producer.send(new ProducerRecord<String, String>("Stations", "dock_bikes", ""+station.getDock_bikes()));
+			producer.send(new ProducerRecord<String, String>("Stations", "free_bases", ""+station.getFree_bases()));
+			producer.send(new ProducerRecord<String, String>("Stations", "reservations_count", ""+station.getReservations_count()));
 		}
-		
 	}
 	
 	void stop() {

@@ -1,11 +1,14 @@
 package kafkaproject;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -26,47 +29,45 @@ public class SimpleConsumer {
 		props.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
 
 		consumer = new KafkaConsumer<>(props);
-
 	}
 	
-	public void suscribe(String[] topic) {
-		System.out.println("suscribre");
-		List<String> topics = Arrays.asList("Stations");
-		this.consumer.subscribe(topics);
+	public void suscribe(List<String> topics, List<TopicPartition> partitions) {
+		System.out.println("suscribe");
+
+		//this.consumer.subscribe(topics);
+		this.consumer.assign(partitions);
 	}
+	
 	
 	public void stop() {
 		System.out.println("FIN");
-		this.consumer.close();
-		
-		}
+		this.consumer.close();	
+	}
 	
 	 public void consume() {
 		 System.out.println("consume enter");
-		
-		
+			
 		while(true) {
 			 
-			ConsumerRecords<String, String> records = this.consumer.poll(200);
+			ConsumerRecords<String, String> records = this.consumer.poll(400);
 			
 			for (ConsumerRecord<String, String> record : records) { 
-				System.out.println("part3");
-				System.out.println("something consumed");
-				System.out.printf("offset = %d, key = %s, value = %s%n",
-				record.offset(), record.key(), record.value());
-				}
+
+				System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+			}
 		}
-		
-		}
+	}
 	
 	public static void main(String[] args) {
 		SimpleConsumer consumerp = new SimpleConsumer();
 		
-		String[] topics = {"consumer-1", "SDTF"};
-		consumerp.suscribe(topics);
-		consumerp.consume();
-		consumerp.stop();
+		List<String> topics = Arrays.asList("Stations");
+		List<TopicPartition> partitions = new ArrayList<TopicPartition>();
 		
-	}
-	
+		partitions.add(new TopicPartition ("Stations", 0));
+		
+		consumerp.suscribe(topics, partitions);
+		consumerp.consume();
+		consumerp.stop();		
+	}	
 }

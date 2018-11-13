@@ -1,8 +1,12 @@
 package kafkaproject;
 
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.protocol.types.Field.Str;
 
 
 public class SimpleProducer {
@@ -56,17 +60,74 @@ public class SimpleProducer {
 		}
 	}
 	
+	/**
+	 * Sends the Station in a String with the ID, Dock_Bikes or Free_Bases if they change.
+	 * First the map with the station is update if it is empty.
+	 */
+	void produceRealTimeStations() {
+		
+		if(ExtractJson.stationMap.isEmpty()) {
+			ExtractJson.fillStationMap();
+			for (Map.Entry<String, Station> entry : ExtractJson.stationMap.entrySet()) {
+			    //System.out.println("clave=" + entry.getKey() + ", valor=" + entry.getValue());
+			    producer.send(new ProducerRecord<String, String>("Stations", "station", ""+ExtractJson.stationMap.get(entry.getKey()).toString()));
+				
+			}
+		}
+		
+		RealTimeThread t = new RealTimeThread();
+		t.start();	
+		
+	}
+	
+	
 	void stop() {
 		System.out.println("FIN");
 		producer.close();
 		
 		}
 	
+	
 	public static void main(String[] args) {
 		SimpleProducer myProducer = new SimpleProducer();
-		myProducer.produceValuesStations();
-		myProducer.stop();
+		myProducer.produceRealTimeStations();
+		//myProducer.stop();
 	}
+	
+	  public class RealTimeThread extends Thread {
+
+		    public void run(){
+		    	while(true) {
+		    		
+		    		 System.out.println("RealTimeThread running");
+		    		 int cnt = 0;
+		    			HashMap<String,Station> map = ExtractJson.getStationMap();
+		    			
+		    			for (Map.Entry<String, Station> entry : map.entrySet()) {
+		    			    //System.out.println("clave=" + entry.getKey() + ", valor=" + entry.getValue());
+		    				String key = entry.getKey();
+		    				
+		    				if(map.get(key).getDock_bikes() != ExtractJson.stationMap.get(key).getDock_bikes()  || map.get(key).getFree_bases() != ExtractJson.stationMap.get(key).getFree_bases()) {
+		    					 producer.send(new ProducerRecord<String, String>("Stations", "station", ""+ExtractJson.stationMap.get(entry.getKey()).toString()));
+		    					 ExtractJson.stationMap.put(key, entry.getValue());
+		    					 cnt++;
+		    				}
+		    				
+		    			}
+		    			
+		    			System.out.println("Estaciones cambiadas: "+cnt);
+		    				
+				       
+				       try {
+				    	    Thread.sleep(10000);
+				    	} catch (InterruptedException e) {
+				    	    e.printStackTrace();
+				    	}
+				       
+		    	}
+		      
+		    }
+		  }
 
 	
 }

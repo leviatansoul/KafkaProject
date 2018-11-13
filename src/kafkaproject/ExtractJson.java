@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.google.gson.*;
@@ -33,6 +34,7 @@ public class ExtractJson {
 	public static ArrayList<Station> stationList = new ArrayList<Station>();
 	private final static String URL = "https://rbdata.emtmadrid.es:8443/BiciMad/get_stations/WEB.SERV.diego2.gd@gmail.com/9933C03A-C88F-4222-8556-6431A1D0D84A/";
 
+	public static HashMap<String, Station> stationMap = new HashMap<String,Station>();
 	
 	public static String getFile(String url) {
 		//-----------------------------------------------------//
@@ -155,6 +157,53 @@ public class ExtractJson {
 
         
         System.out.println(URL);
+	}
+	
+	public static void fillStationMap() {
+		
+		JsonObject json = ExtractJson.getJson(URL);		
+		String data = json.get("data").getAsString();		
+		
+		Gson gson = new Gson();
+    	JsonElement jelem = gson.fromJson(data, JsonElement.class);
+    	JsonObject dataJson = jelem.getAsJsonObject();
+    	
+    	JsonArray stationsJson = dataJson.getAsJsonArray("stations");
+    	
+    	for(int i = 0; i<stationsJson.size(); i++) {
+    		Station st = gson.fromJson(stationsJson.get(i), Station.class);
+    		//System.out.println(st.getLatitude());
+    		stationMap.put(Integer.toString(st.getId()), st);
+    	}
+
+        
+        System.out.println(URL);
+	}
+	
+	public static HashMap<String, Station> getStationMap() {
+		
+		JsonObject json = ExtractJson.getJson(URL);		
+		String data = json.get("data").getAsString();		
+		
+		Gson gson = new Gson();
+    	JsonElement jelem = gson.fromJson(data, JsonElement.class);
+    	JsonObject dataJson = jelem.getAsJsonObject();
+    	
+    	JsonArray stationsJson = dataJson.getAsJsonArray("stations");
+    	
+    	HashMap<String, Station> map = new HashMap<String,Station>();
+    	
+    	for(int i = 0; i<stationsJson.size(); i++) {
+    		Station st = gson.fromJson(stationsJson.get(i), Station.class);
+    		//System.out.println(st.getLatitude());
+    		map.put(Integer.toString(st.getId()), st);
+    	}
+    	
+    	System.out.println(URL);
+    	return map;
+
+        
+       
 	}
 	
 

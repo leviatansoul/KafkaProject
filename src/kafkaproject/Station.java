@@ -178,7 +178,7 @@ public class Station {
 	}
 	
 	public String toString() {
-		return ""+getId()+","+getLatitude()+","+getLongitude()+","+getName()+","+getAddress();
+		return ""+getId()+","+getDock_bikes()+","+getFree_bases();
 	}
 
 

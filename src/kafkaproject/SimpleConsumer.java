@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
+
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -31,13 +33,13 @@ public class SimpleConsumer {
 		consumer = new KafkaConsumer<>(props);
 	}
 	
-	public void suscribe(List<String> topics, List<TopicPartition> partitions) {
+	public void suscribe(List<String> topics) {
 		System.out.println("suscribe");
 
-		//this.consumer.subscribe(topics);
-		this.consumer.assign(partitions);
+		this.consumer.subscribe(topics);
+		//this.consumer.assign(partitions);
+
 	}
-	
 	
 	public void stop() {
 		System.out.println("FIN");
@@ -58,16 +60,29 @@ public class SimpleConsumer {
 		}
 	}
 	
-	public static void main(String[] args) {
-		SimpleConsumer consumerp = new SimpleConsumer();
+/*	public static void main(String[] args) {
+		SimpleConsumer consumer1  = new SimpleConsumer();
+		//SimpleConsumer consumer2  = new SimpleConsumer();
 		
-		List<String> topics = Arrays.asList("Stations");
-		List<TopicPartition> partitions = new ArrayList<TopicPartition>();
+		//List<String> topics = Arrays.asList("Stations");
+		//List<TopicPartition> partitions = new ArrayList<TopicPartition>();
 		
-		partitions.add(new TopicPartition ("Stations", 0));
+		//partitions.add(new TopicPartition ("Stations", 2));
+		//partitions.add(new TopicPartition ("Stations", 1));
 		
-		consumerp.suscribe(topics, partitions);
-		consumerp.consume();
-		consumerp.stop();		
-	}	
+	    TopicPartition topicPartition0 = new TopicPartition("Stations", 0);
+	    TopicPartition topicPartition1 = new TopicPartition("Stations", 1);
+	    
+	    List<TopicPartition> partition0 = Arrays.asList(topicPartition0);	
+	    //List<TopicPartition> partition1 = Arrays.asList(topicPartition1);
+		
+	    consumer1.suscribe(partition0);
+	    //consumer2.suscribe(partition1);
+	    
+	    consumer1.consume();
+	    //consumer2.consume();
+	    
+	    consumer1.stop();
+	    //consumer2.stop();		
+	}	*/
 }

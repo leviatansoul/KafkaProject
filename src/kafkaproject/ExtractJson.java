@@ -32,59 +32,31 @@ import java.lang.reflect.Type;
 public class ExtractJson {
 	
 	public static ArrayList<Station> stationList = new ArrayList<Station>();
-	private final static String URL = "https://rbdata.emtmadrid.es:8443/BiciMad/get_stations/WEB.SERV.diego2.gd@gmail.com/9933C03A-C88F-4222-8556-6431A1D0D84A/";
-
 	public static HashMap<String, Station> stationMap = new HashMap<String,Station>();
 	
+	private final static String URL = "https://rbdata.emtmadrid.es:8443/BiciMad/get_stations/WEB.SERV.diego2.gd@gmail.com/9933C03A-C88F-4222-8556-6431A1D0D84A/";
+
 	public static String getFile(String url) {
-		//-----------------------------------------------------//
-	      //  Step 1:  Start creating a few objects we'll need.
-	      //-----------------------------------------------------//
 
 	      URL u;
 	      InputStream is = null;
 	      BufferedReader dis;
-	      String s;
-	      String res = ""; //
+	      String s, res = "";
 
 	      try {
 
-	         //------------------------------------------------------------//
-	         // Step 2:  Create the URL.                                   //
-	         //------------------------------------------------------------//
-	         // Note: Put your real URL here, or better yet, read it as a  //
-	         // command-line arg, or read it from a file.                  //
-	         //------------------------------------------------------------//
-
+	         //Create the URL.
 	         u = new URL(url);
 
-	         //----------------------------------------------//
-	         // Step 3:  Open an input stream from the url.  //
-	         //----------------------------------------------//
+	         // Step 3:  Open an input stream from the url.
+	         is = u.openStream();
 
-	         is = u.openStream();         // throws an IOException
-
-	         //-------------------------------------------------------------//
-	         // Step 4:                                                     //
-	         //-------------------------------------------------------------//
-	         // Convert the InputStream to a buffered DataInputStream.      //
-	         // Buffering the stream makes the reading faster; the          //
-	         // readLine() method of the DataInputStream makes the reading  //
-	         // easier.                                                     //
-	         //-------------------------------------------------------------//
-
+	         // Convert the InputStream to a buffered DataInputStream.
 	         dis = new BufferedReader(new InputStreamReader(is));
 
-	         //------------------------------------------------------------//
-	         // Step 5:                                                    //
-	         //------------------------------------------------------------//
-	         // Now just read each record of the input stream, and print   //
-	         // it out.  Note that it's assumed that this problem is run   //
-	         // from a command-line, not from an application or applet.    //
-	         //------------------------------------------------------------//
-
+	         // read each record of the input stream
 	         while ((s = dis.readLine()) != null) {
-	            //System.out.println(s);
+	        	 
 	            res = res + s;
 	         }
 
@@ -102,46 +74,45 @@ public class ExtractJson {
 
 	      } finally {
 
-	         //---------------------------------//
-	         // Step 6:  Close the InputStream  //
-	         //---------------------------------//
-
 	         try {
 	            is.close();
 	            
 	         } catch (IOException ioe) {
-	            // just going to ignore this one
+	        	 
 	         }
+	      }
 
-	      } // end of 'finally' clause
-
-	      System.out.println(res);
+	      //System.out.println(res);
 	      return res;
 	}
 	
 	public static JsonObject getJson(String url) {
 		
 		JsonObject jobj = new JsonObject();
+		
 		 try {
-	        	 //Url del json (añadir la de BiciMad)
-	        	String jsonString = ExtractJson.getFile(url); //Obtiene Json en String
+	        	//Returns the Json in string
+	        	String jsonString = ExtractJson.getFile(url);
+	        	
 	        	Gson gson = new Gson();
+	        	
 	        	JsonElement jelem = gson.fromJson(jsonString, JsonElement.class);
-	        	jobj = jelem.getAsJsonObject(); //Obtenemos Json de la web       	
+	        	jobj = jelem.getAsJsonObject();      	
 	        	
 	        }
 	        catch (Exception e) {
 
 	            e.printStackTrace();
 	        }
+		 
 		 return jobj; 
 	}
 	
 	public static void fillStationList() {
+		
 		JsonObject json = ExtractJson.getJson(URL);
 		
 		String data = json.get("data").getAsString();
-		
 		
 		Gson gson = new Gson();
     	JsonElement jelem = gson.fromJson(data, JsonElement.class);
@@ -150,13 +121,12 @@ public class ExtractJson {
     	JsonArray stationsJson = dataJson.getAsJsonArray("stations");
     	
     	for(int i = 0; i<stationsJson.size(); i++) {
+    		
     		Station st = gson.fromJson(stationsJson.get(i), Station.class);
-    		//System.out.println(st.getLatitude());
     		stationList.add(st);
     	}
-
-        
-        System.out.println(URL);
+     
+        //System.out.println(URL);
 	}
 	
 	public static void fillStationMap() {
@@ -171,12 +141,11 @@ public class ExtractJson {
     	JsonArray stationsJson = dataJson.getAsJsonArray("stations");
     	
     	for(int i = 0; i<stationsJson.size(); i++) {
+    		
     		Station st = gson.fromJson(stationsJson.get(i), Station.class);
-    		//System.out.println(st.getLatitude());
     		stationMap.put(Integer.toString(st.getId()), st);
     	}
-
-        
+     
         System.out.println(URL);
 	}
 	
@@ -194,26 +163,18 @@ public class ExtractJson {
     	HashMap<String, Station> map = new HashMap<String,Station>();
     	
     	for(int i = 0; i<stationsJson.size(); i++) {
+    		
     		Station st = gson.fromJson(stationsJson.get(i), Station.class);
-    		//System.out.println(st.getLatitude());
     		map.put(Integer.toString(st.getId()), st);
     	}
     	
     	System.out.println(URL);
-    	return map;
-
-        
-       
+    	return map;       
 	}
 	
-
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		
-		
-    	
     	
         }
-
 }

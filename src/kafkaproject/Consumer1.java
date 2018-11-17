@@ -13,9 +13,9 @@ public class Consumer1 {
 	    //TopicPartition topicPartition0 = new TopicPartition("Stations", 0); 
 	    //List<TopicPartition> partition0 = Arrays.asList(topicPartition0);	
 		
-		List<String> topics = Arrays.asList("Stations");
+		List<TopicPartition> topics = Arrays.asList(new TopicPartition(SimpleConsumer.TOPIC_UNO, 0));
 		
-	    consumer1.suscribe(topics);
+	    consumer1.suscribePartitions(topics);
 	    
 	    consumer1.consume();
 	    

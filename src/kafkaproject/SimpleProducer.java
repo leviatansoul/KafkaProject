@@ -22,6 +22,9 @@ public class SimpleProducer {
 		props.put("bootstrap.servers", "localhost:9092");
 		props.put("key.serializer","org.apache.kafka.common.serialization.StringSerializer");
 		props.put("value.serializer","org.apache.kafka.common.serialization.StringSerializer");
+		//props.put("num.partitions","3");
+		//props.put("default.replication.factor", "3");
+		
 		producer = new KafkaProducer<>(props);
 	}
 	
@@ -56,9 +59,9 @@ public class SimpleProducer {
 			//producer.send(new ProducerRecord<String, String>("Stations", "activate", ""+station.getActivate()));
 			//producer.send(new ProducerRecord<String, String>("Stations", "no_available", ""+station.getNo_available()));
 			//producer.send(new ProducerRecord<String, String>("Stations", "total_bases", ""+station.getTotal_bases()));
-			producer.send(new ProducerRecord<String, String>("Stations", "dock_bikes", ""+station.getDock_bikes()));
-			producer.send(new ProducerRecord<String, String>("Stations", "free_bases", ""+station.getFree_bases()));
-			producer.send(new ProducerRecord<String, String>("Stations", "reservations_count", ""+station.getReservations_count()));
+			producer.send(new ProducerRecord<String, String>("prueba2",0, "dock_bikes", ""+station.getDock_bikes()));
+			producer.send(new ProducerRecord<String, String>("prueba2",1, "free_bases", ""+station.getFree_bases()));
+			producer.send(new ProducerRecord<String, String>("prueba2",2, "reservations_count", ""+station.getReservations_count()));
 		}
 		System.out.println("producido");
 	}
@@ -86,13 +89,14 @@ public class SimpleProducer {
 		
 		System.out.println("FIN");
 		producer.close();	
+		
 	}
 	
 	public static void main(String[] args) {
 		SimpleProducer myProducer = new SimpleProducer();
 		myProducer.produceValuesStations();
 		//myProducer.produceRealTimeStations();
-		//myProducer.stop();
+		myProducer.stop();
 	}
 	
 	  public class RealTimeThread extends Thread {
@@ -109,7 +113,7 @@ public class SimpleProducer {
 		    				String key = entry.getKey();
 		    				
 		    				if(map.get(key).getDock_bikes() != ExtractJson.stationMap.get(key).getDock_bikes()  || map.get(key).getFree_bases() != ExtractJson.stationMap.get(key).getFree_bases()) {
-		    					 producer.send(new ProducerRecord<String, String>("Stations", "station", ""+ExtractJson.stationMap.get(entry.getKey()).toString()));
+		    					 producer.send(new ProducerRecord<String, String>("realtime", "station", ""+ExtractJson.stationMap.get(entry.getKey()).toString()));
 		    					 ExtractJson.stationMap.put(key, entry.getValue());
 		    					 cnt++;
 		    				}

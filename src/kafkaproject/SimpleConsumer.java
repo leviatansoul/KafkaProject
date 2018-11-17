@@ -20,6 +20,10 @@ public class SimpleConsumer {
 
 	Properties props;
 	
+	public final static String TOPIC_UNO = "prueba2";
+
+	public final static String TOPIC_REALTIME = "realtime";
+	
 	KafkaConsumer<String, String> consumer;
 	
 	SimpleConsumer(){
@@ -41,6 +45,14 @@ public class SimpleConsumer {
 
 	}
 	
+	public void suscribePartitions( List<TopicPartition> partitions) {
+		System.out.println("suscribe");
+
+		this.consumer.assign(partitions);
+		//this.consumer.assign(partitions);
+
+	}
+	
 	public void stop() {
 		System.out.println("FIN");
 		this.consumer.close();	
@@ -55,7 +67,7 @@ public class SimpleConsumer {
 			
 			for (ConsumerRecord<String, String> record : records) { 
 
-				System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+				System.out.printf("offset = %d, key = %s, value = %s, partition = %s%n", record.offset(), record.key(), record.value(), record.partition());
 			}
 		}
 	}

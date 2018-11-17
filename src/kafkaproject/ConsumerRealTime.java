@@ -5,20 +5,22 @@ import java.util.List;
 
 import org.apache.kafka.common.TopicPartition;
 
-public class Consumer3 {
+public class ConsumerRealTime {
+
 	public static void main(String[] args) {
 		SimpleConsumer consumer3  = new SimpleConsumer();
 
 	    //TopicPartition topicPartition3 = new TopicPartition("Stations", 2);
 	    //List<TopicPartition> partition3 = Arrays.asList(topicPartition3);	
 	    
-		List<TopicPartition> topics = Arrays.asList(new TopicPartition(SimpleConsumer.TOPIC_UNO, 2));
+		List<String> topics = Arrays.asList(SimpleConsumer.TOPIC_REALTIME);
 		
-	    consumer3.suscribePartitions(topics);
+	    consumer3.suscribe(topics);
 
 	    consumer3.consume();
 
 	    consumer3.stop();
 
 	}
+	
 }

@@ -3,6 +3,7 @@ package kafkaproject;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -20,9 +21,13 @@ public class SimpleConsumer {
 
 	Properties props;
 	
-	public final static String TOPIC_UNO = "prueba2";
+	public final static String TOPIC_DOS = "prueba2";
+	
+	public final static String TOPIC_UNO = "prueba1";
 
 	public final static String TOPIC_REALTIME = "realtime";
+	
+	public static  long initial_timePartitions = 0;
 	
 	KafkaConsumer<String, String> consumer;
 	
@@ -65,10 +70,135 @@ public class SimpleConsumer {
 			 
 			ConsumerRecords<String, String> records = this.consumer.poll(400);
 			
+			Date myDate = new Date();
+			long time = myDate.getTime();
+			
 			for (ConsumerRecord<String, String> record : records) { 
-
-				System.out.printf("offset = %d, key = %s, value = %s, partition = %s%n", record.offset(), record.key(), record.value(), record.partition());
+				
+				System.out.printf("offset = %d, key = %s, value = %s, partition = %s, timestamp: %d%n", record.offset(), record.key(), record.value(), record.partition(), record.timestamp());
+				
+			
 			}
+			
+			Date myDate2 = new Date();
+			long time2 = myDate2.getTime();
+			long res = time2 -time;
+			System.out.println("Tiempo consumer "+res);
+		}
+	}
+	 
+	 public void consumePartitions() {
+		 
+		 
+		 System.out.println("consume enter");
+			
+			long t1 = 0;
+			long t2 = 0;
+			
+			while(true) {
+				 
+				ConsumerRecords<String, String> records = this.consumer.poll(1000);
+
+				int cnt = 0;
+				
+				for (ConsumerRecord<String, String> record : records) { 
+					
+					int size = record.toString().getBytes().length;
+					//System.out.println("Tamaño record: "+i);
+					
+					//System.out.printf("offset = %d, forID=%d, size = %d,  key = %s, value = %s, partition = %s, timestamp: %d%n", record.offset(), cnt, size, record.key(), record.value(), record.partition(), record.timestamp());
+					String[] values = record.value().split(",");
+					cnt++;
+					
+					switch (record.partition()) {
+					
+					case 0:
+						ProducerPartitions.freeBasesPartitionsMap.put(values[0], values[1]);
+						if(values[0].trim().equals("1")) {
+							t1 =  record.timestamp();
+						}
+						if(values[0].trim().equals("175")) {
+							t2 =  record.timestamp();
+						}
+						break;
+						
+					case 1:
+						ProducerPartitions.dockBikesPartitionsMap.put(values[0], values[1]);
+						break;
+						
+					case 2:
+						ProducerPartitions.noAvailablePartitionsMap.put(values[0], values[1]);
+						break;
+					}			
+				
+				}
+				
+				System.out.println(""+ProducerPartitions.freeBasesPartitionsMap.size());
+				if(ProducerPartitions.freeBasesPartitionsMap.size() >= 172) {
+
+					long delay = 400;
+					long t = t2-t1;
+					//t=425;
+					
+					long of1 = Integer.parseInt(ProducerPartitions.freeBasesPartitionsMap.get("1"));
+					long of2 = Integer.parseInt(ProducerPartitions.freeBasesPartitionsMap.get("175"));
+					long total = 171;
+					
+					long val = total*((1000-delay)/t);
+					
+					double th = (val*235*8*3)/1000;
+					
+					System.out.println("DELAY : "+delay);
+					System.out.println("total : "+total);
+					System.out.println("Tiempo : "+t);
+					System.out.println("THROUGHPUT : "+th+" Kbits");
+				}
+				
+				
+
+				//System.out.println("Tiempo consumer ");
+			}
+		 
+		 
+	 }
+	 
+	 public void consumeSinglePartition() {
+		 System.out.println("consume enter");
+			
+		while(true) {
+			 
+			ConsumerRecords<String, String> records = this.consumer.poll(1000);
+
+			int cnt = 0;
+			
+			for (ConsumerRecord<String, String> record : records) { 
+				
+				int size = record.toString().getBytes().length;
+				//System.out.println("Tamaño record: "+i);
+				
+				System.out.printf("offset = %d, forID=%d, size = %d,  key = %s, value = %s, partition = %s, timestamp: %d%n", record.offset(), cnt, size, record.key(), record.value(), record.partition(), record.timestamp());
+				String[] values = record.value().split(",");
+				cnt++;
+				
+				switch (record.key()) {
+				
+				case "free_bases":
+					ProducerSinglePartition.freeBasesSinglePartitionMap.put(values[0], values[1]);
+					break;
+					
+				case "dock_bikes":
+					ProducerSinglePartition.dockBikesSinglePartitionMap.put(values[0], values[1]);
+					break;
+					
+				case "no_available":
+					ProducerSinglePartition.noAvailableSinglePartitionMap.put(values[0], values[1]);
+					break;
+				}			
+			
+			}
+			
+
+			//System.out.println("Tiempo consumer ");
 		}
 	}
 	

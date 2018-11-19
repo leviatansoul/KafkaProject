@@ -13,11 +13,12 @@ public class Consumer1 {
 	    //TopicPartition topicPartition0 = new TopicPartition("Stations", 0); 
 	    //List<TopicPartition> partition0 = Arrays.asList(topicPartition0);	
 		
-		List<TopicPartition> topics = Arrays.asList(new TopicPartition(SimpleConsumer.TOPIC_UNO, 0));
+		List<TopicPartition> topics = Arrays.asList(new TopicPartition(SimpleConsumer.TOPIC_DOS, 0));
+
 		
 	    consumer1.suscribePartitions(topics);
 	    
-	    consumer1.consume();
+	    consumer1.consumePartitions();
 	    
 	    consumer1.stop();
 

@@ -69,9 +69,7 @@ public class SimpleConsumer {
 		while(true) {
 			 
 			ConsumerRecords<String, String> records = this.consumer.poll(400);
-			
-			Date myDate = new Date();
-			long time = myDate.getTime();
+		
 			
 			for (ConsumerRecord<String, String> record : records) { 
 				
@@ -80,10 +78,7 @@ public class SimpleConsumer {
 			
 			}
 			
-			Date myDate2 = new Date();
-			long time2 = myDate2.getTime();
-			long res = time2 -time;
-			System.out.println("Tiempo consumer "+res);
+		
 		}
 	}
 	 
@@ -106,7 +101,7 @@ public class SimpleConsumer {
 					int size = record.toString().getBytes().length;
 					//System.out.println("Tamaño record: "+i);
 					
-					//System.out.printf("offset = %d, forID=%d, size = %d,  key = %s, value = %s, partition = %s, timestamp: %d%n", record.offset(), cnt, size, record.key(), record.value(), record.partition(), record.timestamp());
+					System.out.printf("offset = %d, forID=%d, size = %d,  key = %s, value = %s, partition = %s, timestamp: %d%n", record.offset(), cnt, size, record.key(), record.value(), record.partition(), record.timestamp());
 					String[] values = record.value().split(",");
 					cnt++;
 					
@@ -133,25 +128,22 @@ public class SimpleConsumer {
 				
 				}
 				
-				System.out.println(""+ProducerPartitions.freeBasesPartitionsMap.size());
-				if(ProducerPartitions.freeBasesPartitionsMap.size() >= 172) {
+				//System.out.println(""+ProducerPartitions.freeBasesPartitionsMap.size());
+				if(t2 != 0) {
 
-					long delay = 400;
-					long t = t2-t1;
-					//t=425;
+					long delay = 400; //Calculado aparte
+					long t = t2-t1; //en milisegundos
 					
-					long of1 = Integer.parseInt(ProducerPartitions.freeBasesPartitionsMap.get("1"));
-					long of2 = Integer.parseInt(ProducerPartitions.freeBasesPartitionsMap.get("175"));
-					long total = 171;
+					long total = 171; //messages
 					
 					long val = total*((1000-delay)/t);
 					
-					double th = (val*235*8*3)/1000;
+					double th = (val*235*8*3)/(1000*t); //Se multiplica por 3 por los 3 consumers que hay
 					
-					System.out.println("DELAY : "+delay);
-					System.out.println("total : "+total);
-					System.out.println("Tiempo : "+t);
-					System.out.println("THROUGHPUT : "+th+" Kbits");
+					System.out.println("DELAY ms: "+delay);
+					System.out.println("Total msg : "+total);
+					System.out.println("Tiempo ms: "+t);
+					System.out.println("THROUGHPUT : "+th+" Mbits");
 				}
 				
 				
@@ -164,12 +156,15 @@ public class SimpleConsumer {
 	 
 	 public void consumeSinglePartition() {
 		 System.out.println("consume enter");
-			
+		 
+		 int cnt = 0;
+		 long t1 = 0, t2 = 0;
+		 
 		while(true) {
 			 
 			ConsumerRecords<String, String> records = this.consumer.poll(1000);
 
-			int cnt = 0;
+			
 			
 			for (ConsumerRecord<String, String> record : records) { 
 				
@@ -179,7 +174,12 @@ public class SimpleConsumer {
 				System.out.printf("offset = %d, forID=%d, size = %d,  key = %s, value = %s, partition = %s, timestamp: %d%n", record.offset(), cnt, size, record.key(), record.value(), record.partition(), record.timestamp());
 				String[] values = record.value().split(",");
 				cnt++;
-				
+				if (cnt == 1) {
+					t1 = record.timestamp();
+				}
+				if(cnt == 172) {
+					t2 = record.timestamp();
+				}
 				switch (record.key()) {
 				
 				case "free_bases":
@@ -193,12 +193,29 @@ public class SimpleConsumer {
 				case "no_available":
 					ProducerSinglePartition.noAvailableSinglePartitionMap.put(values[0], values[1]);
 					break;
-				}			
+				}	
+				
+				
+				if(cnt == 172) {
+
+					long delay = 400; //Calculado aparte
+					long t = t2-t1; //en ms
+					//t=425;
+					
+					long total = 171; //msg
+					
+					long val = total*((1000-delay)/t);
+					
+					double th = (val*235*8)/(1000*t);
+					
+					System.out.println("DELAY : "+delay);
+					System.out.println("Total msg : "+total);
+					System.out.println("Tiempo ms: "+t);
+					System.out.println("THROUGHPUT : "+th+" Mbits");
+				}
 			
 			}
 			
-
-			//System.out.println("Tiempo consumer ");
 		}
 	}
 	

@@ -22,8 +22,6 @@ public class SimpleProducer {
 		props.put("bootstrap.servers", "localhost:9092");
 		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 		props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-		// props.put("num.partitions","3");
-		// props.put("default.replication.factor", "3");
 
 		producer = new KafkaProducer<>(props);
 	}
@@ -60,14 +58,11 @@ public class SimpleProducer {
 			producer.send(new ProducerRecord<String, String>(SimpleConsumer.TOPIC_UNO,  "dock_bikes", "" +station.getId()+","+ station.getDock_bikes()));
 			producer.send(new ProducerRecord<String, String>(SimpleConsumer.TOPIC_UNO,  "free_bases", "" +station.getId()+","+  station.getFree_bases()));
 			producer.send(new ProducerRecord<String, String>(SimpleConsumer.TOPIC_UNO,  "no_available", "" +station.getId()+","+  station.getNo_available()));
-
 		}
 
 		long timef = myDate.getTime();
 
 		long res = timef - time;
-		
-
 	}
 
 	void produceValuesStations() {
@@ -101,7 +96,6 @@ public class SimpleProducer {
 			// producer.send(new ProducerRecord<String, String>("Stations", "total_bases",
 			// ""+station.getTotal_bases()));
 
-	
 
 			producer.send(new ProducerRecord<String, String>(SimpleConsumer.TOPIC_DOS, 0, "dock_bikes",
 					""+station.getId()+"," + station.getDock_bikes()));

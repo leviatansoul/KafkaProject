@@ -10,11 +10,7 @@ public class Consumer1 {
 	public static void main(String[] args) {
 		SimpleConsumer consumer1  = new SimpleConsumer();
 		
-	    //TopicPartition topicPartition0 = new TopicPartition("Stations", 0); 
-	    //List<TopicPartition> partition0 = Arrays.asList(topicPartition0);	
-		
 		List<TopicPartition> topics = Arrays.asList(new TopicPartition(SimpleConsumer.TOPIC_DOS, 0));
-
 		
 	    consumer1.suscribePartitions(topics);
 	    

@@ -82,7 +82,6 @@ public class ExtractJson {
 	         }
 	      }
 
-	      //System.out.println(res);
 	      return res;
 	}
 	
@@ -125,8 +124,7 @@ public class ExtractJson {
     		Station st = gson.fromJson(stationsJson.get(i), Station.class);
     		stationList.add(st);
     	}
-     
-        //System.out.println(URL);
+
 	}
 	
 	public static void fillStationMap() {

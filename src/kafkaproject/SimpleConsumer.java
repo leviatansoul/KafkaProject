@@ -16,15 +16,12 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 
-
 public class SimpleConsumer {
 
 	Properties props;
 	
 	public final static String TOPIC_DOS = "prueba2";
-	
 	public final static String TOPIC_UNO = "prueba1";
-
 	public final static String TOPIC_REALTIME = "realtime";
 	
 	public static  long initial_timePartitions = 0;
@@ -46,16 +43,12 @@ public class SimpleConsumer {
 		System.out.println("suscribe");
 
 		this.consumer.subscribe(topics);
-		//this.consumer.assign(partitions);
-
 	}
 	
 	public void suscribePartitions( List<TopicPartition> partitions) {
 		System.out.println("suscribe");
 
 		this.consumer.assign(partitions);
-		//this.consumer.assign(partitions);
-
 	}
 	
 	public void stop() {
@@ -69,22 +62,17 @@ public class SimpleConsumer {
 		while(true) {
 			 
 			ConsumerRecords<String, String> records = this.consumer.poll(400);
-		
 			
 			for (ConsumerRecord<String, String> record : records) { 
 				
 				System.out.printf("offset = %d, key = %s, value = %s, partition = %s, timestamp: %d%n", record.offset(), record.key(), record.value(), record.partition(), record.timestamp());
-				
-			
+					
 			}
-			
-		
 		}
 	}
 	 
 	 public void consumePartitions() {
-		 
-		 
+		 	 
 		 System.out.println("consume enter");
 			
 			long t1 = 0;
@@ -145,13 +133,7 @@ public class SimpleConsumer {
 					System.out.println("Tiempo ms: "+t);
 					System.out.println("THROUGHPUT : "+th+" Mbits");
 				}
-				
-				
-
-				//System.out.println("Tiempo consumer ");
-			}
-		 
-		 
+			}	 
 	 }
 	 
 	 public void consumeSinglePartition() {
@@ -163,8 +145,6 @@ public class SimpleConsumer {
 		while(true) {
 			 
 			ConsumerRecords<String, String> records = this.consumer.poll(1000);
-
-			
 			
 			for (ConsumerRecord<String, String> record : records) { 
 				
@@ -194,8 +174,7 @@ public class SimpleConsumer {
 					ProducerSinglePartition.noAvailableSinglePartitionMap.put(values[0], values[1]);
 					break;
 				}	
-				
-				
+								
 				if(cnt == 172) {
 
 					long delay = 400; //Calculado aparte
@@ -212,36 +191,8 @@ public class SimpleConsumer {
 					System.out.println("Total msg : "+total);
 					System.out.println("Tiempo ms: "+t);
 					System.out.println("THROUGHPUT : "+th+" Mbits");
-				}
-			
-			}
-			
+				}		
+			}			
 		}
 	}
-	
-/*	public static void main(String[] args) {
-		SimpleConsumer consumer1  = new SimpleConsumer();
-		//SimpleConsumer consumer2  = new SimpleConsumer();
-		
-		//List<String> topics = Arrays.asList("Stations");
-		//List<TopicPartition> partitions = new ArrayList<TopicPartition>();
-		
-		//partitions.add(new TopicPartition ("Stations", 2));
-		//partitions.add(new TopicPartition ("Stations", 1));
-		
-	    TopicPartition topicPartition0 = new TopicPartition("Stations", 0);
-	    TopicPartition topicPartition1 = new TopicPartition("Stations", 1);
-	    
-	    List<TopicPartition> partition0 = Arrays.asList(topicPartition0);	
-	    //List<TopicPartition> partition1 = Arrays.asList(topicPartition1);
-		
-	    consumer1.suscribe(partition0);
-	    //consumer2.suscribe(partition1);
-	    
-	    consumer1.consume();
-	    //consumer2.consume();
-	    
-	    consumer1.stop();
-	    //consumer2.stop();		
-	}	*/
 }

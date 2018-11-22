@@ -3,7 +3,6 @@ package kafkaproject;
 import java.util.HashMap;
 
 public class ProducerPartitions {
-
 	
 	public static HashMap<String, String> freeBasesPartitionsMap = new HashMap<String,String>();
 	public static HashMap<String, String> dockBikesPartitionsMap = new HashMap<String,String>();
@@ -17,5 +16,4 @@ public class ProducerPartitions {
 		myProducer.stop();
 
 	}
-
 }

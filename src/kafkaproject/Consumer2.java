@@ -9,9 +9,6 @@ public class Consumer2 {
 	public static void main(String[] args) {
 
 		SimpleConsumer consumer2  = new SimpleConsumer();
-
-	    //TopicPartition topicPartition1 = new TopicPartition("Stations", 1);
-	    //List<TopicPartition> partition1 = Arrays.asList(topicPartition1);
 	    
 		List<TopicPartition> topics = Arrays.asList(new TopicPartition(SimpleConsumer.TOPIC_DOS, 1));
 		

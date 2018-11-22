@@ -6,8 +6,6 @@ public class ProducerRealTime {
 		
 		SimpleProducer myProducer = new SimpleProducer();
 		myProducer.produceRealTimeStations();
-		//myProducer.stop();
 
 	}
-
 }
